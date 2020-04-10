@@ -18,34 +18,34 @@ class Djikstra:
         paths = []
 
         # We can keep a copy of graph because sometimes data can be updates while running the code. So we can avoid runtime errors
-        graph_copy = graph.copy()
+        graph_copy = graph
 
         for node in graph_copy:
             shortest_distance[node] = INFINITY
         shortest_distance[start] = 0
 
         curr_node = start
-        
+
         while graph_copy:
-            minimum_distanceNode = None
 
+            minimum_distance_node = None
             for node in graph_copy:
-                if(minimum_distanceNode == None):
-                    minimum_distanceNode = start
-                elif(shortest_distance[node] < shortest_distance[minimum_distanceNode]):
-                    minimum_distanceNode = node
+                if(minimum_distance_node == None):
+                    minimum_distance_node = node
+                elif(shortest_distance[node] < shortest_distance[minimum_distance_node]):
+                    minimum_distance_node = node
+           
+            #print(graph_copy)
+            path_options = graph_copy[minimum_distance_node].items()
 
-            #print(graph_copy.get('A').items())
-            path_options = graph_copy.get(minimum_distanceNode)
+            for next_node, distance in path_options:
+                if(shortest_distance[minimum_distance_node]+distance < shortest_distance[next_node]):
+                    shortest_distance[next_node] = shortest_distance[minimum_distance_node]+distance
+                    visited_nodes[next_node] = minimum_distance_node
 
-            for next_node, distance in path_options.items():
-                if(shortest_distance[minimum_distanceNode]+distance < shortest_distance[next_node]):
-                    shortest_distance[next_node] = shortest_distance[minimum_distanceNode]+distance
-                    visited_nodes[next_node] = minimum_distanceNode
+            graph_copy.pop(minimum_distance_node)
 
-            graph_copy.pop(minimum_distanceNode)
-
-        curr_node = destination
+            curr_node = destination
         while curr_node != start:
             try:
                 paths.insert(0, curr_node)
@@ -55,6 +55,9 @@ class Djikstra:
                 break
         paths.insert(0, start)
 
+        if(shortest_distance[destination]!=INFINITY):
+            print(paths)
+
 
 # Represent the graph which holds all possible paths and distances between stations.
 # Later on we need to manipulate something like this using our db
@@ -62,14 +65,12 @@ class Djikstra:
 # For example if I execute graph['A'], it will return this [{'B': 3}, {'C': 4},{'D':7}].
 # So we don't need to iterate through all elements in our dataset like in a array to find a value.
 graph = {}
-graph['A'] = {'B': 3, 'C': 4, 'D': 7}
-graph['B'] = {'C': 1, 'F': 5}
-graph['C'] = {'F': 6, 'D': 2}
-graph['D'] = {'E': 3, 'G': 6}
-graph['E'] = {'G': 3, 'H': 4}
-graph['F'] = {'E': 1, 'H': 8}
-graph['G'] = {'H': 2}
-graph['H'] = {'G': 2}
+graph['A'] = {'B': 2, 'C': 4}
+graph['B'] = {'C': 1, 'D': 4,'E': 2}
+graph['C'] = {'E': 3}
+graph['D'] = {'F': 2}
+graph['E'] = {'D': 3,'F': 2}
+graph['F'] = {}
 
 dj = Djikstra()
-dj.findShortestPath('A', 'G', graph)
+dj.findShortestPath('A', 'F', graph)
