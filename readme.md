@@ -93,3 +93,7 @@ Support:
     
     Pull request:
         git pull
+
+    Common gmail:
+        email-pdsadev@gmail.com
+        password-pdsadevnibm
