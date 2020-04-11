@@ -79,9 +79,17 @@ Support:
     Change global git account:
         git config [--global] user.name "Full Name"
         git config [--global] user.email "email@address.com"
+
     Install python dependencies:
         pip3 install -r requirements.txt
+
     Acticate virtual environment:
         py -m venv env
         source env/bin/activate -> MAC
         .\env\Scripts\activate -> WINDOWS
+
+    Push local change to bitbucket:
+        git status -> git add . (or git add {file}) -> git push
+    
+    Pull request:
+        git pull
