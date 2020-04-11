@@ -33,7 +33,7 @@ class Djikstra:
                     minimum_distance_node = node
                 elif(shortest_distance[node] < shortest_distance[minimum_distance_node]): # Else we check whether the distance to current node is less than distance to previous minimum distance node.If it is we set minimum distance node to new one
                     minimum_distance_node = node
-            
+
             path_options = graph_copy[minimum_distance_node].items() # Get all possible paths which is availble in minimum distance node as iterable 
 
             for next_node, distance in path_options: # Unpack path_option array as next_node and distance. Array looks like somthing like this -> [('D',4),('C',2),('E',1)]
