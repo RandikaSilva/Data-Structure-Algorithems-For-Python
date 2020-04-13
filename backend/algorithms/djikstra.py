@@ -25,6 +25,8 @@ class Djikstra:
 
         curr_node = start # Setting current node to starting node
 
+        print(graph_copy.get(start).items())
+
         while graph_copy: # Looping through all the elements until graph_copy has values
 
             minimum_distance_node = None # Setting minimum distance node to null
