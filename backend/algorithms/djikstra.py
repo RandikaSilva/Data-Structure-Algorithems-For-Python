@@ -1,6 +1,6 @@
 class Djikstra:
     # Function which accepts our starting station,destination and our data graph
-    def findShortestPath(self, start, destination, graph):
+    def findShortestPath(self, start, destination, graph):# 'A','F'
 
         # We need to assign infinity value to all nodes expect our starting node. So we can use this contant
         INFINITY = 9999999
@@ -20,6 +20,7 @@ class Djikstra:
         # Looping through all element in the graph and setting all nodes to infinity except starting node
         for node in graph_copy:
             shortest_distance[node] = INFINITY  # Set shortest distance using dictionary. Then we get something like this: {'A':9999999,'B':9999999,'C':9999999} 
+        
         shortest_distance[start] = 0 # Then we set starting node distance to Zero
 
         curr_node = start # Setting current node to starting node
@@ -28,14 +29,14 @@ class Djikstra:
 
             minimum_distance_node = None # Setting minimum distance node to null
 
-            for node in graph_copy: # Looping through all the elements
+            for node in graph_copy: # Looping through all the elements NODE ='F'
                 if(minimum_distance_node == None): #If minimum distance node is null then we are setting minimum_distance_node as first node in our graph
                     minimum_distance_node = node
                 elif(shortest_distance[node] < shortest_distance[minimum_distance_node]): # Else we check whether the distance to current node is less than distance to previous minimum distance node.If it is we set minimum distance node to new one
                     minimum_distance_node = node
 
             path_options = graph_copy[minimum_distance_node].items() # Get all possible paths which is availble in minimum distance node as iterable 
-
+          
             for next_node, distance in path_options: # Unpack path_option array as next_node and distance. Array looks like somthing like this -> [('D',4),('C',2),('E',1)]
                 if(shortest_distance[minimum_distance_node]+distance < shortest_distance[next_node]): # Not we are applying Djikstra logic. Here we are checking whether sum of distances of minimum distance node and distance to next node is less than next nodes distance
                     shortest_distance[next_node] = shortest_distance[minimum_distance_node]+distance # if it is, We are updating shortest distance dictionary with new distance
@@ -50,6 +51,7 @@ class Djikstra:
         # Again when we look for E's value we get value B. Just like that when we trace back to our starting node we automatically come up with shortest path
         
         curr_node = destination # Setting current node as destination node
+
         while curr_node != start: # Iterating until we get starting node
             try:
                 paths.insert(0, curr_node) # Pushing nodes of our path one by one to paths array
@@ -70,6 +72,7 @@ class Djikstra:
 # For example if I execute graph['A'], it will return this [{'B': 3}, {'C': 4},{'D':7}].
 # So we don't need to iterate through all elements in our dataset like in a array to find a value.
 graph = {}
+
 graph['A'] = {'B': 2, 'C': 4}
 graph['B'] = {'C': 1, 'D': 4, 'E': 2}
 graph['C'] = {'E': 3}
@@ -79,3 +82,4 @@ graph['F'] = {}
 
 dj = Djikstra()
 dj.findShortestPath('A', 'F', graph)
+
