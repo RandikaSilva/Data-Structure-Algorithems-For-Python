@@ -25,6 +25,7 @@ Djikstra's algorithm pseudocode:
 
 
 Tasks:
+    (Isuru)
     1)  Load data from the DB at application start & Populate local graph data using that DB data
         - We need to create data structure like below using our DB data
             graph['A'] = {'B': 2, 'C': 4}
@@ -36,17 +37,21 @@ Tasks:
         - Use python dictionary (We will discuss that later)
         - https://www.w3schools.com/python/python_dictionaries.asp
 
+    (Nimnadi)
     2)  Whenever user update station data, First we must update our local data cache (Our local data structure)
         - Needed to implement functions for updating,deleting,inserting
         - https://www.w3schools.com/python/python_dictionaries.asp
 
+    (Heshan)
     3) Create database structure to store,
         - All details about train stations
 
+    (Heshan)
     4)  We must only update our remote DB after updating our local data cache (For update,delete,insert) 
         - Functions to communicate with POSTGRESQL database (Select all,Find,Update,Delete,Insert)
         - https://www.postgresql.org/download/
 
+    (Avishka)
     5)  We should implement REST API using python flask framework
         End-points:-
             Request shortest path and distance data (Method-POST,Params-start,destination)
@@ -56,6 +61,7 @@ Tasks:
             Retrive all station data (Method-get,Params-)
         - https://programminghistorian.org/en/lessons/creating-apis-with-python-and-flask
 
+    (Minoli,Sachini)
     6)  Create attractive UI which include,
         - Update,Delete,Insert forms
         - Form to get starting & ending stations
