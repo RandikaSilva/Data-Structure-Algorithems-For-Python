@@ -1,65 +1,126 @@
 class Node:
-    def __init__(self, data,next, w):
-        self.vertex = data
-        self.next = next
-        self.w = w
+    def __init__(self, station_name, next_station, distance):
+        self.station_name = station_name
+        self.distance = distance
+        self.next_station = next_station
 
+
+class SinglyLinkedList:
+    def __init__(self):
+        self.head = None
+
+    def add(self, src, next_station, distance):
+        if(self.head == None):
+            first = Node(src, next_station, distance)
+            self.head = first
+        else:
+            tmp = self.head
+            while(tmp.next_station != None):
+                tmp = tmp.next_station
+            tmp.next_station = Node(src, next_station, distance)
+
+    def get(self, key):
+        target_node = None
+        temp = self.head
+        while temp != None:
+            if temp.station_name==key:
+                target_node=temp
+                break
+            temp = temp.next_station
+        return target_node
+
+    def pop(self, key):
+        target_node = self.head
+        target_node_prev = None
+        while target_node.station_name != key:
+            target_node_prev = target_node
+            target_node = target_node.next_station
+            if target_node is None:
+                break
+        if target_node!=None:
+            if target_node_prev != None:
+                target_node_prev.next_station = target_node.next_station
+            else:
+                self.head = target_node.next_station
+
+    def get_all(self):
+        station_list=[]
+        current_station = self.head
+        while current_station != None:
+            station_list.append({current_station.station_name: current_station.distance})
+            current_station = current_station.next_station
+        return station_list
+
+    def print(self):
+        current_station = self.head
+        while current_station != None:
+            print(str(current_station.station_name)+":"+str(current_station.distance))
+            current_station = current_station.next_station
+
+    def update(self,key,station_name=None,distance=None):
+        if station_name is None:
+            target_station = self.get(key)
+            target_station.distance=distance
+        elif distance is None:
+            target_station = self.get(key)
+            if target_station is not None:
+                target_station.station_name=station_name
+        elif station_name and distance is not None:
+            target_station = self.get(key)
+            target_station.distance=distance
+            target_station.station_name=station_name
 
 class Graph:
-    def __init__(self, vertices):
-        self.nodes=[]
-        self.V = vertices
-        self.graph = [None] * self.V
+    def __init__(self):
+        self.stations = []
+        self.stations_arr = []
 
-    def add_edge(self, src, dest, w):
-        if src not in self.nodes:
-            self.nodes.append(src)
-
-        index = self.nodes.index(src)
-        if self.graph[index] is None:
-            head = Node(dest,None,w)
-            self.graph[index]=head
-        else:
-            curr_node=None
-            curr_list = self.graph[index]
-            while curr_list:
-                if(curr_list.next==None):
-                    curr_node=curr_list
-                    break
-                else:
-                    curr_list=curr_list.next
-            curr_node.next=Node(dest,None,w)
+    def add(self, src, dest, distance):
+        if src not in self.stations:
+            self.stations_arr.append(SinglyLinkedList())
+            self.stations.append(src)
+        index = self.stations.index(src)
+        self.stations_arr[index].add(dest, None, distance)
 
     def print_graph(self):
-        for i in range(len(self.graph)):
-            print(self.nodes[i]+"->")
-            temp = self.graph[i]
-            while temp:
-                print(str(temp.vertex)+":"+str(temp.w))
-                temp = temp.next
+        for i in range(len(self.stations_arr)):
+            print(self.stations[i]+"->")
+            print(self.stations_arr[i].print())
             print(" \n")
+        if len(self.stations_arr) is 0:
+            print("Graph empty")
 
-    def get(self,key):
-        #{'B': 2, 'C': 4}
+    def get(self, key):
         if key is not None:
-            index= self.nodes.index(key)
+            index = self.stations.index(key)
             if index is not None:
-                vertex_list=[]
-                node_list=self.graph[index]
-                while node_list:
-                    if(node_list.next==None):
-                        break
-                    else:
-                        vertex_list.insert(0,{node_list.vertex:node_list.w})
-                        node_list=node_list.next
-                return vertex_list
+                node_list = self.stations_arr[index]
+                return node_list.get_all()
         else:
-            return None
+            return []
 
-    def pop(self,key):
-        index = self.nodes.index(key)
-        if index is not None:
-            self.V=self.V-1
-            self.graph.pop(index)
-            self.nodes.pop(index)
+    def pop(self, key):
+        if key is not None:
+            index = self.stations.index(key)
+            if index is not None:
+                self.station_count = self.station_count-1
+                self.stations_arr.pop(index)
+                self.stations.pop(index)
+                self.stations_arr.pop(index)
+                for station in self.stations_arr:
+                    station.pop(key)
+        else:
+            self.stations_arr = []
 
+    def update_station_distance(self,src,dest=None,station_name=None,distance=None):
+        if src is not None:
+            index = self.stations.index(src)
+            if index is not None:
+                if station_name is None:
+                    node_list = self.stations_arr[index]
+                    node_list.update(dest,None,distance)
+                if dest is None:
+                    for station in self.stations_arr:
+                        station.update(src,station_name)
+                    self.stations[index]=station_name
+    
