@@ -1,7 +1,6 @@
-from linked_list import Graph
-from adj_mat_test import AdjacencyMatrix
+#from linked_list import Graph
+from AdjacencyMatrices import AdjacencyMatrix
 import time
-
 
 class Djikstra:
     def __init__(self, graph):
@@ -12,7 +11,7 @@ class Djikstra:
         self.graph_copy = graph
         self.checked_nodes={}
 
-    def findShortestPath(self, start, destination):  
+    def _find_shortest_path(self, start, destination):  
         for node in self.graph_copy.stations:
             self.shortest_distance[node] = self.INFINITY
         self.shortest_distance[start] = 0
@@ -69,4 +68,4 @@ graph.add('E', 'F', 2)
 graph.add('F', None, None)
 
 dj = Djikstra(graph)
-dj.findShortestPath('A', 'F')
+dj._find_shortest_path('A', 'F')

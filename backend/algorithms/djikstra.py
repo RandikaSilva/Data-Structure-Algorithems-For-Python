@@ -1,4 +1,5 @@
 import time
+import sys
 
 class Djikstra:
 
@@ -11,7 +12,7 @@ class Djikstra:
         self.checked_nodes={}
 
     # Function which accepts our starting station,destination and our data graph
-    def findShortestPath(self, start, destination):
+    def _find_shortest_path(self, start, destination):
         # Looping through all element in the graph and setting all nodes to infinity except starting node
         for node in self.graph_copy:
             self.shortest_distance[node] = self.INFINITY  # Set shortest distance using dictionary. Then we get something like this: {'A':9999999,'B':9999999,'C':9999999} 
@@ -76,5 +77,5 @@ graph['D'] = {'F': 2}
 graph['E'] = {'D': 3, 'F': 2}
 graph['F'] = {}
 
-dj = Djikstra(graph)
-dj.findShortestPath('A', 'F')
+#dj = Djikstra(graph)
+#dj.find_shortest_path('A', 'F')
