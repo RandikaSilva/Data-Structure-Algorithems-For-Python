@@ -1,5 +1,3 @@
-from constants.errors import ERRORS
-
 class Node:
     def __init__(self, station_name, next_station, distance):
         self.station_name = station_name
@@ -11,50 +9,38 @@ class SinglyLinkedList:
         self.head = None
 
     def _add(self, src, next_station, distance):
-        try:
-            if(self.head == None):
-                first = Node(src, next_station, distance)
-                self.head = first
-            else:
-                tmp = self.head
-                while(tmp.next_station != None):
-                    tmp = tmp.next_station
-                tmp.next_station = Node(src, next_station, distance)
-        except Exception:
-            return ERRORS.get("error")
+        if(self.head == None):
+            first = Node(src, next_station, distance)
+            self.head = first
+        else:
+            tmp = self.head
+            while(tmp.next_station != None):
+                tmp = tmp.next_station
+            tmp.next_station = Node(src, next_station, distance)
 
     def _get(self, key):
-        try:
-            target_node = None
-            temp = self.head
-            while temp != None:
-                if temp.station_name==key:
-                    target_node=temp
-                    break
-                temp = temp.next_station
-            if target_node is not None:
-                return target_node
-            else:
-                return ERRORS.get("not_exist")
-        except Exception:
-            return ERRORS.get("error")
+        target_node = None
+        temp = self.head
+        while temp != None:
+            if temp.station_name==key:
+                target_node=temp
+                break
+            temp = temp.next_station
+        return target_node
 
     def _pop(self, key):
-        try:
-            target_node = self.head
-            target_node_prev = None
-            while target_node.station_name != key:
-                target_node_prev = target_node
-                target_node = target_node.next_station
-                if target_node is None:
-                    break
-            if target_node!=None:
-                if target_node_prev != None:
-                    target_node_prev.next_station = target_node.next_station
-                else:
-                    self.head = target_node.next_station
-        except Exception:
-            return ERRORS.get("error")
+        target_node = self.head
+        target_node_prev = None
+        while target_node.station_name != key:
+            target_node_prev = target_node
+            target_node = target_node.next_station
+            if target_node is None:
+                break
+        if target_node!=None:
+            if target_node_prev != None:
+                target_node_prev.next_station = target_node.next_station
+            else:
+                self.head = target_node.next_station
 
     def _get_all(self):
         station_list=[]
@@ -94,13 +80,11 @@ class Graph:
         self.stations_arr[index]._add(dest, None, distance)
 
     def _add_station(self,key):
-        if key not in self.stations:
-            self.stations_arr.append(SinglyLinkedList())
-            self.stations.append(key)
+        self.stations.append(key)
 
     def _print_graph(self):
         for i in range(len(self.stations_arr)):
-            print(str(self.stations[i])+"->")
+            print(self.stations[i]+"->")
             print(self.stations_arr[i]._print())
             print(" \n")
         if len(self.stations_arr) is 0:
@@ -119,10 +103,12 @@ class Graph:
         if key is not None:
             index = self.stations.index(key)
             if index is not None:
+                self.station_count = self.station_count-1
                 self.stations_arr.pop(index)
                 self.stations.pop(index)
+                self.stations_arr.pop(index)
                 for station in self.stations_arr:
-                    station._pop(key)
+                    station.pop(key)
         else:
             self.stations_arr = []
 
@@ -132,9 +118,9 @@ class Graph:
             if index is not None:
                 if station_name is None:
                     node_list = self.stations_arr[index]
-                    node_list._update(dest,None,distance)
+                    node_list.update(dest,None,distance)
                 if dest is None:
                     for station in self.stations_arr:
-                        station._update(src,station_name)
+                        station.update(src,station_name)
                     self.stations[index]=station_name
     

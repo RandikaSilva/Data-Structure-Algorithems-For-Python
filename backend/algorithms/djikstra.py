@@ -1,6 +1,3 @@
-import time
-import sys
-
 class Djikstra:
 
     def __init__(self,graph):
@@ -46,7 +43,7 @@ class Djikstra:
         # If you can remember after we apply Djikstra algorithm we come up with table of path to our destination node
         # So first we start from our destination which is F, Then we look for F's value in visited_node then we get value E.
         # Again when we look for E's value we get value B. Just like that when we trace back to our starting node we automatically come up with shortest path
-        
+        print(self.shortest_distance)
         curr_node = destination # Setting current node as destination node
 
         while curr_node != start: # Iterating until we get starting node
@@ -54,13 +51,17 @@ class Djikstra:
                 self.paths.insert(0, curr_node) # Pushing nodes of our path one by one to paths array
                 curr_node = self.visited_nodes[curr_node] # Change current node to prev node of the path
             except KeyError: # If there is no path to our destination we get KeyError 
-                print("Path is not reachable") 
-                break
+                return None
         self.paths.insert(0, start) # After looping finally we add our starting node because in the loop it breaks when we hit start node (curr_node != start)
 
         if(self.shortest_distance[destination] != self.INFINITY): # Check if distance to our destination node is not equal to infinity
-            print("Shortest distance :-     ", self.shortest_distance[destination]) # Printing shortest distance
-            print("Shortest path :-     ", self.paths) # Printing shortest path
+            return {
+                'distance':self.shortest_distance[destination],
+                'shortest_path':self.paths
+            }
+        else:
+            return None
+        return None
             
 # Represent the graph which holds all possible paths and distances between stations.
 # Later on we need to manipulate something like this using our db
@@ -68,14 +69,14 @@ class Djikstra:
 # For example if I execute graph['A'], it will return this [{'B': 3}, {'C': 4},{'D':7}].
 # So we don't need to iterate through all elements in our dataset like in a array to find a value.
 
-graph = {}
+# graph = {}
 
-graph['A'] = {'B': 2, 'C': 4}
-graph['B'] = {'C': 1, 'D': 4, 'E': 2}
-graph['C'] = {'E': 3}
-graph['D'] = {'F': 2}
-graph['E'] = {'D': 3, 'F': 2}
-graph['F'] = {}
+# graph['A'] = {'B': 2, 'C': 4}
+# graph['B'] = {'C': 1, 'D': 4, 'E': 2}
+# graph['C'] = {'E': 3}
+# graph['D'] = {'F': 2}
+# graph['E'] = {'D': 3, 'F': 2}
+# graph['F'] = {}
 
 #dj = Djikstra(graph)
 #dj.find_shortest_path('A', 'F')

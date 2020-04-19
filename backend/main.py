@@ -1,55 +1,33 @@
-# 0 - Dictionary (Hashmap)
-# 1 - LinkedList
-# 2 - Adjacancy
-from flask import Flask, request
-import json
-
 from helpers.dictionary_builder import DictionaryBuilder
 from helpers.adjacency_builder import AdjacencyMatrixBuilder
 from helpers.linkedlist_builder import LinkedListBuilder
+from db.database import Database
+from constants.environment import _initialize_environment
+from server.server import start
+import os
 
 class ShortestPath:
 
-    app = Flask(__name__)
+    def __init__(self):
+        _initialize_environment()
+        self.DATA_STRUCTURE_MODE =os.environ.get('DATA_STRUCTURE_MODE')
+        self.db = Database()
+        self.load_data()
 
-    def initialize_services(self):
-        self.data_structure_mode = 0
+    def load_data(self):
+        connected_station_data_set = self.db._get_all_connected_stations()
+        station_data_set=self.db._get_all_stations()
+        #if self.DATA_STRUCTURE_MODE == "0":
+        builder = DictionaryBuilder()
+        builder._build(station_data_set,connected_station_data_set)
+        #elif self.DATA_STRUCTURE_MODE == "1":
+        builder = LinkedListBuilder()
+        builder._build(station_data_set,connected_station_data_set)
+        #elif self.DATA_STRUCTURE_MODE == "2": 
+        # station_count = self.db._get_station_count()[0][0]
+        builder = AdjacencyMatrixBuilder()
+        builder._build(station_data_set,connected_station_data_set)
+        start()
 
-    @app.route('/')
-    def _hello_world(self):
-        return 'Hello, World!'
-
-    @app.route('/navigate', methods=['POST'])
-    def _navigate(self):
-        print(request.form['name'])
-        return "Navigate"
-
-    @app.route('/station/update', methods=['POST'])
-    def _update_station(self,update_data):
-        return "Update"
-
-    @app.route('/station/delete', methods=['POST'])
-    def _delete_station(self,delete_data):
-        return "Delete"
-
-    @app.route('/station/insert', methods=['POST'])
-    def _insert_station(self,insert_data):
-        return "Insert"
-
-    @app.route('/station/view', methods=['GET'])
-    def _view_station(self,view_data):
-        return "View"
-
-    def _load_data(self):
-        if self.data_structure_mode == 0:
-            builder = DictionaryBuilder()
-            pass
-        elif self.data_structure_mode == 1:
-            # Call linkedlist builder method
-            pass
-        elif self.data_structure_mode == 2:
-            # Call adjacancy builder method
-            pass
-
-    if __name__ == '__main__':
-        app.run()
+if __name__ == "__main__": 
+    ShortestPath() 
