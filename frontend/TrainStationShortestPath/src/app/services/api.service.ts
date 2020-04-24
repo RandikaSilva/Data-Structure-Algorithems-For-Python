@@ -159,4 +159,15 @@ export class ApiService {
       throw "Error"
     }
   }
+  getMinimumConnectors(addedList) {
+    try {
+      return this.http.post(
+        this.apiBaseUrlLive + "find_minimum_path",
+        {
+          selected_stations: addedList
+        }
+      )
+    } catch{
+      throw "Error"
+    }}
 }

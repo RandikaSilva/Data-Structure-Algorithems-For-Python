@@ -5,34 +5,40 @@ import { InsertPageComponent } from './insert-page/insert-page.component';
 import { DeletePageComponent } from './delete-page/delete-page.component';
 import { UpdatePageComponent } from './update-page/update-page.component';
 import { ViewPageComponent } from './view-page/view-page.component';
+import { format } from 'url';
+import { MinimumConnectorsComponent } from './minimum-connectors/minimum-connectors.component';
 
 
 const routes: Routes = [
   {
-    path: "search",
+    path: 'search',
     component: SearchPageComponent
   },
   {
-    path: "insert",
+    path: 'insert',
     component: InsertPageComponent
   },
   {
-    path: "delete",
+    path: 'delete',
     component: DeletePageComponent
   },
   {
-    path: "update",
+    path: 'update',
     component: UpdatePageComponent
   },
   {
-    path: "view",
+    path: 'view',
     component: ViewPageComponent
   },
   {
-    path: "",
+    path: 'Minimun',
+    component: MinimumConnectorsComponent
+  },
+  {
+    path: '',
     component: SearchPageComponent
   },
-  
+
 ];
 
 @NgModule({

@@ -1,0 +1,25 @@
+.vertical-center {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    padding-left: 36%;
+}
+
+.content {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#parentDiv {
+    text-align: center;
+}
+
+#main {
+    margin: 20% auto;
+    width: 500px;
+    text-align: left;
+}
