@@ -1,0 +1,36 @@
+.content {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  .vertical-center {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    padding-left:36%;
+  }
+  .my-custom-scrollbar {
+    position: relative;
+    height: 700px;
+    overflow: auto;
+    }
+    .table-wrapper-scroll-y {
+    display: block;
+    }
+    #parentDiv{
+      text-align: center;
+      }
+      
+      #main{
+      margin:5% auto;
+      width:500px;
+      text-align: left;
+      }
+     .tableWrap{
+      overflow-y:scroll;
+      height:600px;
+      display:block;
+     }

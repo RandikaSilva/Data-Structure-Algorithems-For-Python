@@ -1,0 +1,47 @@
+<div id="parentDiv" class="content">
+    <div id="main">
+        <form>
+            <div style="width:500px" *ngIf="station==true?true:false">
+                <div style="padding-bottom: 10%;" class="btn-group" role="group" aria-label="Basic example">
+                    <button style="width: 250px;" type="button" class="btn btn-primary" (click)="toggleMode()">Insert
+                        station</button>
+                    <button style="width: 250px;" type="button" class="btn btn-secondary" (click)="toggleMode()">Insert
+                        station connection</button>
+                </div>
+                <h1 style="color: white;">Insert Station</h1>
+                <p>
+                    <input class="form-control" type="text" placeholder="Station Name" id="stationName" #stationName
+                        required autofocus>
+                </p>
+                <button type="button" class="btn btn-primary btn-block"
+                    (click)="insertStation(stationName.value)">Insert</button>
+            </div>
+            <div style="width:500px" *ngIf="station==false?true:false">
+                <div style="padding-bottom: 10%;" class="btn-group" role="group" aria-label="Basic example">
+                    <button style="width: 250px;" type="button" class="btn btn-secondary" (click)="toggleMode()">Insert
+                        station</button>
+                    <button style="width: 250px;" type="button" class="btn btn-primary" (click)="toggleMode()">Insert
+                        station connection</button>
+                </div>
+                <h1 style="color: white;">Insert Station Connection</h1>
+                <p>
+                    <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Station Name"
+                        id="stationName" list="stationList" #stationName required autofocus>
+
+                    <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Connected Station"
+                        id="connectedStation" list="stationList" #connectedStation required autofocus>
+                    <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Distance"
+                        id="distance" #distance required autofocus>
+
+                    <datalist id="stationList">
+                        <option *ngFor="let station of stationList" [value]="station">{{station}}</option>
+                    </datalist>
+
+                </p>
+                <button type="button" class="btn btn-primary btn-block"
+                    (click)="insertStationConnection(stationName.value,connectedStation.value,distance.value)">Insert
+                    Connection</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+<div id="parentDiv" class="content">
+    <div id="main">
+        <div style="width:500px" *ngIf="station==true?true:false">
+            <div style="padding-bottom: 10%;" class="btn-group" role="group" aria-label="Basic example">
+                <button style="width: 250px;" type="button" class="btn btn-primary" (click)="toggleMode()">View
+                    station</button>
+                <button style="width: 250px;" type="button" class="btn btn-secondary" (click)="toggleMode()">View
+                    station connections</button>
+            </div>
+            <button style="margin-left: 210px;margin-bottom: 20px;" type="button" class="btn btn-warning"
+                (click)="reload()">Reload</button>
+            <div class="tableWrap">
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;" scope="col">Station Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let station of stations">
+                            <td style="text-align: center;">{{station}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="width:500px" *ngIf="station==false?true:false">
+            <div style="padding-bottom: 10%;" class="btn-group" role="group" aria-label="Basic example">
+                <button style="width: 250px;" type="button" class="btn btn-secondary" (click)="toggleMode()">View
+                    station</button>
+                <button style="width: 250px;" type="button" class="btn btn-primary" (click)="toggleMode()">View
+                    station connections</button>
+            </div>
+            <button style="margin-left: 210px;margin-bottom: 20px;" type="button" class="btn btn-warning"
+                (click)="reload()">Reload</button>
+            <div class="tableWrap">
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;" scope="col">Station Name</th>
+                            <th style="text-align: center;" scope="col">Connected Station Name</th>
+                            <th style="text-align: center;" scope="col">Distance (KM)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let connection of stationConnections">
+                            <td style="text-align: center;">{{connection.station_name}}</td>
+                            <td style="text-align: center;">{{connection.next_station}}</td>
+                            <td style="text-align: center;">{{connection.distance}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

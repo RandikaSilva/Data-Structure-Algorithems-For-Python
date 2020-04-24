@@ -1,0 +1,49 @@
+<div id="parentDiv" class="content">
+    <div id="main">
+        <form>
+            <div style="width:500px" *ngIf="station==true?true:false">
+                <div style="padding-bottom: 10%;" class="btn-group" role="group" aria-label="Basic example">
+                    <button style="width: 250px;" type="button" class="btn btn-primary" (click)="toggleMode()">Update
+                        station</button>
+                    <button style="width: 250px;" type="button" class="btn btn-secondary" (click)="toggleMode()">Update
+                        station connection</button>
+                </div>
+                <h1 style="color: white;">Update Station</h1>
+                <p>
+                    <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Old Station Name"
+                        id="oldStationName" list="stationList" #oldStationName required autofocus>
+
+                    <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Station Name"
+                        id="stationName" #stationName required autofocus>
+                </p>
+                <button type="button" class="btn btn-primary btn-block"
+                    (click)="updateStation(oldStationName.value,stationName.value)">Update</button>
+            </div>
+            <div style="width:500px" *ngIf="station==false?true:false">
+                <div style="padding-bottom: 10%;" class="btn-group" role="group" aria-label="Basic example">
+                    <button style="width: 250px;" type="button" class="btn btn-secondary" (click)="toggleMode()">Update
+                        station</button>
+                    <button style="width: 250px;" type="button" class="btn btn-primary" (click)="toggleMode()">Update
+                        station connection</button>
+                </div>
+                <h1 style="color: white;">Update Station Connection</h1>
+                <p>
+                    <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Station Name"
+                        id="stationName" list="stationList" #stationName required autofocus>
+
+                    <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Connected Station"
+                        id="connectedStation" list="stationList" #connectedStation required autofocus>
+
+                    <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Distance"
+                        id="distance" #distance required autofocus>
+                </p>
+                <button type="button" class="btn btn-primary btn-block"
+                    (click)="updateStationConnection(stationName.value,connectedStation.value,distance.value)">Update
+                    Connection</button>
+            </div>
+            <datalist id="stationList">
+                <option *ngFor="let station of stationList" [value]="station">{{station}}</option>
+            </datalist>
+        </form>
+    </div>
+</div>

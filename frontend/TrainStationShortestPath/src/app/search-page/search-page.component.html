@@ -1,0 +1,20 @@
+<div id="parentDiv" class="content">
+    <div id="main">
+        <form>
+            <h1 style="color: white;">Search Shortest Path</h1>
+            <p>
+                <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Start" id="start"
+                    list="stationList" #startStation required autofocus>
+            </p>
+            <p>
+                <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Destination"
+                    id="destination" list="stationList" #destinationStation required autofocus>
+            </p>
+            <datalist id="stationList">
+                <option *ngFor="let station of stationList" [value]="station">{{station}}</option>
+            </datalist>
+            <button type="button" class="btn btn-primary btn-block"
+                (click)="seachPath(startStation.value,destinationStation.value)">Search</button>
+        </form>
+    </div>
+</div>
