@@ -10,6 +10,7 @@ import { DeletePageComponent } from './delete-page/delete-page.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ViewPageComponent } from './view-page/view-page.component';
 import { CommonModule } from '@angular/common';
+import { MinimumConnectorsComponent } from './minimum-connectors/minimum-connectors.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CommonModule } from '@angular/common';
     InsertPageComponent,
     UpdatePageComponent,
     DeletePageComponent,
-    ViewPageComponent
+    ViewPageComponent,
+    MinimumConnectorsComponent
   ],
   imports: [
     BrowserModule,

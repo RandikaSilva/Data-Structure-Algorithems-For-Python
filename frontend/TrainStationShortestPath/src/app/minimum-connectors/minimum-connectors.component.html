@@ -1,0 +1,34 @@
+<div id="parentDiv" class="content">
+    <div id="main">
+        <form>
+            <div style="width:500px" *ngIf="station==true?true:false">
+                <h1 style="color: white;">View Minimum Connectors</h1>
+                <div class="row">
+                    <div class="col-8">
+                        <input style="margin-bottom: 5px;" class="form-control" type="text" placeholder="Old Station Name" id="oldStationName" list="stationList" #oldStationName required autofocus/>
+                    </div>
+                    <div class="col-3">
+                        <button type="button" class="btn btn-primary btn-block" (click)="AddStation(oldStationName.value)">Add</button>
+                    </div>
+                    <div class="col-3">
+                        <button type="button" class="btn btn-primary btn-block" (click)="View()">View</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h2 style="display: inline; color: aliceblue;" *ngFor="let station of AddedList">
+                    {{station}}->
+                </h2>
+            </div>
+            <div>
+                <h2 style="display: inline; color: aliceblue;" *ngFor="let station of final_path">
+                    {{station}}->
+                </h2>
+            </div>
+
+            <datalist id="stationList">
+              <option *ngFor="let station of stationList" [value]="station">{{station}}</option>
+          </datalist>
+        </form>
+    </div>
+</div>
