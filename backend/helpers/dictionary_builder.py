@@ -1,117 +1,220 @@
-from data.dictionary import DICTIONARY
 from db.database import Database
 from helpers.station_name_mapper import StationMapper
+from constants.errors import ERRORS
 import uuid as UUID
+import psycopg2
+import os
 
 
 class DictionaryBuilder:
     def __init__(self):
         self.db = Database()
         self.mapper = StationMapper()
+        self.DICTIONARY = {}
 
-    def _build(self, station_data_set, connected_station_data_set):
+    def _build(self):
+        connected_station_data_set = self.db._get_all_connected_stations()
+        station_data_set = self.db._get_all_stations()
         try:
-            for data in station_data_set:
-                station = data[1]
-                DICTIONARY[station] = {}
-            for data in connected_station_data_set:
-                station = data[0]
-                next_station = data[1]
-                distance = int(data[2])
-                target_data = DICTIONARY.get(station)
-                if target_data is not None:
-                    DICTIONARY[station][next_station] = distance
-                else:
-                    DICTIONARY[station] = {next_station: distance}
+            if connected_station_data_set['status'] and station_data_set['status'] is True:
+                for data in station_data_set['data']:
+                    station = data[1]
+                    self.DICTIONARY[station] = {}
+                for data in connected_station_data_set['data']:
+                    station = data[0]
+                    next_station = data[1]
+                    distance = int(data[2])
+                    target_data = self.DICTIONARY.get(station)
+                    if target_data is not None:
+                        self.DICTIONARY[station][next_station] = distance
+                    else:
+                        self.DICTIONARY[station] = {next_station: distance}
+            else:
+                return ERRORS.get("database")
         except KeyError:
-            print("Invalid key")
+            return ERRORS.get("key_error")
+        except IndexError:
+            return ERRORS.get("index")
+        except Exception:
+            return ERRORS.get("error")
+
+    def _reset_cache_dictionary(self):
+        self.DICTIONARY.clear()
+        return True
+
+    def _get_cache(self):
+        return self.DICTIONARY
 
     def _add_station(self, station):
+        is_error = False
         try:
-            #uuid = str(UUID.uuid4())[:8]
-            DICTIONARY[station] = {}
-            return
+            stations = self.DICTIONARY.keys()
+            if station not in stations:
+                self.DICTIONARY[station] = {}
+                return True
+            else:
+                is_error = True
+                return ERRORS.get("duplicate")
         except KeyError:
-            print("Invalid key")
+            is_error = True
+            return ERRORS.get("key_error")
+        except Exception:
+            is_error = True
+            return ERRORS.get("error")
         finally:
-            self.db._insert_station_data(station)
+            pass
+            if is_error == False:
+                try:
+                    self.db._insert_station_data(station)
+                except psycopg2.Error:
+                    return ERRORS.get("database")
 
     def _add_station_connector(self, station, next_station, distance):
+        is_error = False
         try:
-            #mapped_station_name = self.mapper._convert_to_station_id(station)
-            # mapped_next_station_name = self.mapper._convert_to_station_id(
-            # next_station)
-            # if DICTIONARY[station] is None:
-            #     DICTIONARY[mapped_station_name] = {}
-            DICTIONARY[station][next_station] = int(
-                distance)
-            return
+            try:
+                self.DICTIONARY[station][next_station]
+                return ERRORS.get("duplicate")
+            except KeyError:
+                self.DICTIONARY[station][next_station] = int(distance)
+                return True
         except KeyError:
-            print("Invalid key")
+            is_error = True
+            return ERRORS.get("key_error")
+        except Exception:
+            is_error = True
+            return ERRORS.get("error")
         finally:
-            self.db._insert_connected_station_data(
-                station, next_station, int(distance))
+            if is_error == False:
+                try:
+                    self.db._insert_connected_station_data(
+                        station, next_station, int(distance))
+                except psycopg2.Error:
+                    return ERRORS.get("database")
 
     def _delete(self, key):
+        is_error = False
         try:
-            #mapped_key = self.mapper._convert_to_station_id(key)
-            DICTIONARY.pop(key)
+            self.DICTIONARY.pop(key)
             matched_stations = []
-            for station in DICTIONARY:
-                for connector in DICTIONARY[station]:
+            for station in self.DICTIONARY:
+                for connector in self.DICTIONARY[station]:
                     if connector == key:
                         matched_stations.append(station)
             for station in matched_stations:
-                DICTIONARY[station].pop(key)
-            return
+                self.DICTIONARY[station].pop(key)
+            return True
         except KeyError:
-            print("Invalid key")
+            is_error = True
+            return ERRORS.get("key_error")
+        except Exception:
+            is_error = True
+            return ERRORS.get("error")
         finally:
-            self.db._delete_station_data(key)
+            if is_error == False:
+                try:
+                    self.db._delete_station_data(key)
+                except psycopg2.Error:
+                    return ERRORS.get("database")
+
+    def _delete_connection(self, key, next_station):
+        is_error = False
+        try:
+            if self.DICTIONARY[key][next_station] != None:
+                self.DICTIONARY[key].pop(next_station)
+                return True
+            else:
+                return ERRORS.get('not_exist')
+        except KeyError:
+            is_error = True
+            return ERRORS.get("key_error")
+        except Exception:
+            is_error = True
+            return ERRORS.get("error")
+        finally:
+            if is_error == False:
+                try:
+                    self.db._delete_station_connection(key, next_station)
+                except psycopg2.Error:
+                    return ERRORS.get("database")
 
     def _update_station(self, key, station_name):
+        is_error = False
         try:
-            #mapped_key = self.mapper._convert_to_station_id(key)
-            # mapped_station_name = self.mapper._convert_to_station_id(
-            #     station_name)
-            target_data = DICTIONARY[key]
-            DICTIONARY[station_name] = target_data
-            DICTIONARY.pop(key)
+            target_data = self.DICTIONARY[key]
+            self.DICTIONARY[station_name] = target_data
+            self.DICTIONARY.pop(key)
             matched_stations = []
-            for station in DICTIONARY:
-                for connector in DICTIONARY[station]:
+            for station in self.DICTIONARY:
+                for connector in self.DICTIONARY[station]:
                     if connector == key:
                         matched_stations.append(station)
-            print(matched_stations)
             for station in matched_stations:
-                target_data = DICTIONARY[station][key]
-                DICTIONARY.pop(station)
-                DICTIONARY[station] = {}
-                DICTIONARY[station][station_name] = target_data
-            return
+                target_data = self.DICTIONARY[station][key]
+                self.DICTIONARY.pop(station)
+                self.DICTIONARY[station] = {}
+                self.DICTIONARY[station][station_name] = target_data
+            return True
         except KeyError:
-            print("Invalid key")
+            is_error = True
+            return ERRORS.get("key_error")
+        except Exception:
+            is_error = True
+            return ERRORS.get("error")
         finally:
-            self.db._update_station_data(key, station_name)
+            if is_error == False:
+                try:
+                    self.db._update_station_data(key, station_name)
+                except psycopg2.Error:
+                    return ERRORS.get("database")
 
     def _update_station_connector(self, station, next_station, distance):
+        is_error = False
         try:
-            #mapped_key = self.mapper._convert_to_station_id(key)
-            # mapped_next_station = self.mapper._convert_to_station_id(
-            # next_station)
-            DICTIONARY[station][next_station] = int(distance)
-            return
+            if self.DICTIONARY[station][next_station] != None:
+                self.DICTIONARY[station][next_station] = int(distance)
+                return True
+            else:
+                return ERRORS.get("not_exist")
         except KeyError:
-            print("Invalid key")
+            is_error = True
+            return ERRORS.get("key_error")
+        except Exception:
+            is_error = True
+            return ERRORS.get("error")
         finally:
-            self.db._update_connected_station_data(
-                station, next_station, distance)
+            if is_error == False:
+                try:
+                    self.db._update_connected_station_data(
+                        station, next_station, distance)
+                except psycopg2.Error:
+                    return ERRORS.get("database")
 
     def _get_all(self):
-        return DICTIONARY
+        stations = []
+        for station in self.DICTIONARY.keys():
+            stations.append(station)
+        return stations
+
+    def _get_all_connections(self):
+        connections = []
+        for station_name, connection in self.DICTIONARY.items():
+            for next_station, distance in connection.items():
+                connections.append({
+                    "station_name": station_name,
+                    "next_station": next_station,
+                    "distance": distance
+                })
+        if len(connections)!=0:
+            return {
+                "status":True,
+                "data":connections
+            }
+        else:
+            return ERRORS.get("error")
 
     def _get(self, key):
         try:
-            return DICTIONARY[key]
+            return self.DICTIONARY[key]
         except KeyError:
-            print("Invalid key")
+            return ERRORS.get("key_error")
