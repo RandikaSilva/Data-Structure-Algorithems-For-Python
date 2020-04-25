@@ -60,9 +60,6 @@ export class MinimumConnectorsComponent implements OnInit {
           this.directed_connnections = result['data']['directed_connections'];
           this.final_path = result['data']['final_path'];
           this.total_distance = result['data']['total_distance'];
-          console.log("Data");
-          console.log(result['data']['total_distance']);
-           console.log(result['data']['final_path']);
        }else{
         this.final_path = result['data']['total_distance'];
        }
