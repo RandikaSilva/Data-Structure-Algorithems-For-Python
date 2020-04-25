@@ -11,6 +11,7 @@ export class SearchPageComponent implements OnInit {
   stationList:any = []
   distance =0;
   connection: any=[];
+  dataLoad=false
 
   constructor(private api:ApiService) {
     this.fillStationList()
@@ -29,10 +30,12 @@ export class SearchPageComponent implements OnInit {
   }
 
   seachPath(start,destination){
+    this.dataLoad=false
     if(this.stationList.includes(start)==true&&this.stationList.includes(destination)==true){
       this.api.searchShortestPath(start,destination).subscribe((result)=>{
         console.log(result)
         if(result['status']!=false){
+          this.dataLoad=true
           this.connection = result['data']['shortest_path'];
           this.distance = result['data']['distance'];
           console.log(this.distance)
