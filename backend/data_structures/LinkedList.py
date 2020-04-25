@@ -106,12 +106,12 @@ class Graph:
     def _add(self, src, dest, distance):
         try:
             if src and dest and distance is not None:
-                if src not in self.stations:
-                    self.stations_arr.append(SinglyLinkedList())
-                    self.stations.append(src)
-                index = self.stations.index(src)
-                self.stations_arr[index]._add(dest, None, distance) 
-                return True
+                if src in self.stations:
+                    index = self.stations.index(src)
+                    self.stations_arr[index]._add(dest, None, distance) 
+                    return True
+                else:
+                    return ERRORS.get("not_exist")
             else:
                 return ERRORS.get("null_error")
         except Exception:

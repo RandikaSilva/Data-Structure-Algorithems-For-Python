@@ -5,6 +5,7 @@ from constants.errors import ERRORS
 import uuid as UUID
 import psycopg2
 import os
+import time
 
 class LinkedListBuilder:
     def __init__(self):
@@ -44,13 +45,16 @@ class LinkedListBuilder:
     def _add_station(self, station):
         is_error = False
         try:
+            start_time = time.time()
             result = self.LINKEDLIST._add_station(station)
+            print(str(time.time() - start_time)+" Linkedlist add station")
             if result is True:
                 return True
             else:
                 is_error=True
                 return result 
         except Exception:
+            is_error=True
             return ERRORS.get("error")
         finally:
             if is_error==False:
@@ -59,40 +63,46 @@ class LinkedListBuilder:
                 except psycopg2.Error:
                     return ERRORS.get("database")
 
-    def _add_station_connector(self, station, next_station, distance):
+    def _add_station_connector(self, station, next_stations, distance):
         is_error = False
         try:
+            start_time = time.time()
             all_connections = self._get_all_connections()
-            for connection in all_connections:
+            for connection in all_connections['data']:
                 station_name=connection["station_name"]
                 next_station=connection["next_station"]
-                if station_name==station and next_station==next_station:
+                if station_name==station and next_station==next_stations:
                     return ERRORS.get("duplicate")
-            result = self.LINKEDLIST._add(station, next_station, int(distance))
+            result = self.LINKEDLIST._add(station, next_stations, int(distance))
+            print(str(time.time() - start_time)+" Linkedlist add station connection")
             if result is True:
                 return True
             else:
                 is_error=True
                 return result
         except Exception:
+            is_error = True
             return ERRORS.get("error")
         finally:
             if is_error==False:
                 try:
-                    self.db._insert_connected_station_data(station, next_station,str(distance))
+                    print(self.db._insert_connected_station_data(station, next_stations,str(distance)))
                 except psycopg2.Error:
                     return ERRORS.get("database")
 
     def _delete(self, key):
         is_error = False
         try:
+            start_time = time.time()
             result = self.LINKEDLIST._pop(key)
+            print(str(time.time() - start_time)+" Linkedlist delete station")
             if result is True:
                 return True
             else:
                 is_error=True
                 return result
         except Exception:
+            is_error=True
             return ERRORS.get("error")
         finally:
             if is_error==False:
@@ -104,13 +114,16 @@ class LinkedListBuilder:
     def _delete_connection(self, key,next_station):
         is_error = False
         try:
+            start_time = time.time()
             result = self.LINKEDLIST._pop_station_connection(key,next_station)
+            print(str(time.time() - start_time)+" Linkedlist delete station connection")
             if result is True:
                 return True
             else:
                 is_error=True
                 return result
         except Exception:
+            is_error=True
             return ERRORS.get("error")
         finally:
             if is_error==False:
@@ -122,13 +135,16 @@ class LinkedListBuilder:
     def _update_station(self, key, station_name):
         is_error = False
         try:
+            start_time = time.time()
             result = self.LINKEDLIST._update_station_distance(key, None, station_name, None)
+            print(str(time.time() - start_time)+" Linkedlist update station")
             if result is True:
                 return True
             else:
                 is_error=True
                 return result
         except Exception:
+            is_error=True
             return ERRORS.get("error")
         finally:
             if is_error==False:
@@ -140,27 +156,35 @@ class LinkedListBuilder:
     def _update_station_connector(self, key, next_station, distance):
         is_error = False
         try:
+            start_time = time.time()
             result = self.LINKEDLIST._update_station_distance(key, next_station, None, str(distance))
+            print(str(time.time() - start_time)+" Linkedlist update station connection")
             if result is True:
                 return True
             else:
                 is_error=True
                 return result
         except Exception:
+            is_error=True
             return ERRORS.get("error")
         finally:
             if is_error==False:
                 try:
-                    self.db._update_connected_station_data(key, next_station,distance)
+                    self.db._update_connected_station_data(key, next_station,str(distance))
                 except psycopg2.Error:
                     return ERRORS.get("database")
  
     def _get_all(self):
-        return self.LINKEDLIST.stations
+        start_time = time.time()
+        stations = self.LINKEDLIST.stations
+        print(str(time.time() - start_time)+" Linkedlist get all station")
+        return stations
 
     def _get_all_connections(self):
         try:
+            start_time = time.time()
             result = self.LINKEDLIST._get_all()
+            print(str(time.time() - start_time)+" Linkedlist get all station connections")
             return result
         except Exception:
             return ERRORS.get("error")

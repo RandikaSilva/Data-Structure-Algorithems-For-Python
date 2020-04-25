@@ -89,7 +89,7 @@ class Database:
                 'status':True,
                 'data':None
             }
-        except (Exception, psycopg2.Error):
+        except (psycopg2.Error):
             return ERRORS.get("database")
         finally:
             if self.connection==None:

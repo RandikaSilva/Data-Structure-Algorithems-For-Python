@@ -4,7 +4,7 @@ from constants.errors import ERRORS
 import uuid as UUID
 import psycopg2
 import os
-
+import time
 
 class DictionaryBuilder:
     def __init__(self):
@@ -48,9 +48,11 @@ class DictionaryBuilder:
     def _add_station(self, station):
         is_error = False
         try:
+            start_time = time.time()
             stations = self.DICTIONARY.keys()
             if station not in stations:
                 self.DICTIONARY[station] = {}
+                print(str(time.time() - start_time)+" Dictionary add station")
                 return True
             else:
                 is_error = True
@@ -73,10 +75,13 @@ class DictionaryBuilder:
         is_error = False
         try:
             try:
+                start_time = time.time()
                 self.DICTIONARY[station][next_station]
+                is_error = True
                 return ERRORS.get("duplicate")
             except KeyError:
                 self.DICTIONARY[station][next_station] = int(distance)
+                print(str(time.time() - start_time)+" Dictionary add station connection")
                 return True
         except KeyError:
             is_error = True
@@ -95,6 +100,7 @@ class DictionaryBuilder:
     def _delete(self, key):
         is_error = False
         try:
+            start_time = time.time()
             self.DICTIONARY.pop(key)
             matched_stations = []
             for station in self.DICTIONARY:
@@ -103,6 +109,7 @@ class DictionaryBuilder:
                         matched_stations.append(station)
             for station in matched_stations:
                 self.DICTIONARY[station].pop(key)
+            print(str(time.time() - start_time)+" Dictionary delete station")
             return True
         except KeyError:
             is_error = True
@@ -120,8 +127,10 @@ class DictionaryBuilder:
     def _delete_connection(self, key, next_station):
         is_error = False
         try:
+            start_time = time.time()
             if self.DICTIONARY[key][next_station] != None:
                 self.DICTIONARY[key].pop(next_station)
+                print(str(time.time() - start_time)+" Dictionary delete station connection")
                 return True
             else:
                 return ERRORS.get('not_exist')
@@ -141,6 +150,7 @@ class DictionaryBuilder:
     def _update_station(self, key, station_name):
         is_error = False
         try:
+            start_time = time.time()
             target_data = self.DICTIONARY[key]
             self.DICTIONARY[station_name] = target_data
             self.DICTIONARY.pop(key)
@@ -154,6 +164,7 @@ class DictionaryBuilder:
                 self.DICTIONARY.pop(station)
                 self.DICTIONARY[station] = {}
                 self.DICTIONARY[station][station_name] = target_data
+            print(str(time.time() - start_time)+" Dictionary update station")
             return True
         except KeyError:
             is_error = True
@@ -171,8 +182,10 @@ class DictionaryBuilder:
     def _update_station_connector(self, station, next_station, distance):
         is_error = False
         try:
+            start_time = time.time()
             if self.DICTIONARY[station][next_station] != None:
                 self.DICTIONARY[station][next_station] = int(distance)
+                print(str(time.time() - start_time)+" Dictionary update station connection")
                 return True
             else:
                 return ERRORS.get("not_exist")
@@ -191,12 +204,15 @@ class DictionaryBuilder:
                     return ERRORS.get("database")
 
     def _get_all(self):
+        start_time = time.time()
         stations = []
         for station in self.DICTIONARY.keys():
             stations.append(station)
+        print(str(time.time() - start_time)+" Dictionary get all station")
         return stations
 
     def _get_all_connections(self):
+        start_time = time.time()
         connections = []
         for station_name, connection in self.DICTIONARY.items():
             for next_station, distance in connection.items():
@@ -206,6 +222,7 @@ class DictionaryBuilder:
                     "distance": distance
                 })
         if len(connections)!=0:
+            print(str(time.time() - start_time)+" Dictionary get all station connections")
             return {
                 "status":True,
                 "data":connections

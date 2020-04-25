@@ -5,7 +5,7 @@ from constants.errors import ERRORS
 import uuid as UUID
 import psycopg2
 import os
-import threading
+import time
 
 class AdjacencyMatrixBuilder:
     def __init__(self):
@@ -47,7 +47,9 @@ class AdjacencyMatrixBuilder:
     def _add_station(self, station):
         is_error = False
         try:
+            start_time = time.time()
             result = self.ADJACENCY._add_station(station)
+            print(str(time.time() - start_time)+" Adjacency Insert Station")
             if result is True:
                 return True
             else:
@@ -65,7 +67,9 @@ class AdjacencyMatrixBuilder:
     def _add_station_connector(self, station, next_station, distance):
         is_error = False
         try:
+            start_time = time.time()
             result = self.ADJACENCY._add(station, next_station, int(distance))
+            print(str(time.time() - start_time)+" Adjacency Insert Station Conncetor")
             if result is True:
                 return True
             else:
@@ -84,7 +88,9 @@ class AdjacencyMatrixBuilder:
     def _delete(self, key):
         is_error = False
         try:
+            start_time = time.time()
             result = self.ADJACENCY._pop(key)
+            print(str(time.time() - start_time)+" Adjacency Delete Station")
             if result is True:
                 return True
             else:
@@ -102,7 +108,9 @@ class AdjacencyMatrixBuilder:
     def _delete_connection(self, key, next_station):
         is_error = False
         try:
+            start_time = time.time()
             result = self.ADJACENCY._pop_station_connection(key, next_station)
+            print(str(time.time() - start_time)+" Adjacency Delete Station Connector")
             if result is True:
                 return True
             else:
@@ -120,7 +128,9 @@ class AdjacencyMatrixBuilder:
     def _update_station(self, key, station_name):
         is_error = False
         try:
+            start_time = time.time()
             result = self.ADJACENCY._update_station(key, station_name)
+            print(str(time.time() - start_time)+" Adjacency Update Station")
             if result is True:
                 return True
             else:
@@ -138,8 +148,10 @@ class AdjacencyMatrixBuilder:
     def _update_station_connector(self, key, next_station, distance):
         is_error = False
         try:
+            start_time = time.time()
             result = self.ADJACENCY._update_station_distance(
                 key, next_station, int(distance))
+            print(str(time.time() - start_time)+" Adjacency Update Station Connector")
             if result is True:
                 return True
             else:
@@ -156,10 +168,14 @@ class AdjacencyMatrixBuilder:
                     return ERRORS.get("database")
 
     def _get_all(self):
-        return self.ADJACENCY.stations
+        start_time = time.time()
+        stations = self.ADJACENCY.stations
+        print(str(time.time() - start_time)+" Adjacency Get All Station")
+        return stations
 
     def _get_all_connections(self):
         try:
+            start_time = time.time()
             connections = []
             for i in range(0, len(self.ADJACENCY.adjacency_matrix)):
                 for j in range(0, len(self.ADJACENCY.adjacency_matrix[0])):
@@ -169,6 +185,7 @@ class AdjacencyMatrixBuilder:
                             "next_station": self.ADJACENCY.stations[j],
                             "distance": self.ADJACENCY.adjacency_matrix[i][j]
                         })
+            print(str(time.time() - start_time)+" Adjacency Get All Station Connector")
             return {
                 "status": True,
                 "data": connections
