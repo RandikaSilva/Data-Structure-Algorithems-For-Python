@@ -24,15 +24,15 @@ app = Flask(__name__)
 
 loaded = False
 
-with app.app_context():
-    if loaded == False:
-        _initialize_environment()
-        os.environ['DATA_MODIFIED'] = "0"
-        os.environ['DATA_STRUCTURE_MODE'] = "1"
-        dictionary_builder._build()
-        adjacency_builder._build()
-        linkedlist_builder._build()
-        loaded = True
+#with app.app_context():
+#    if loaded == False:
+#        _initialize_environment()
+#        os.environ['DATA_MODIFIED'] = "0"
+#        os.environ['DATA_STRUCTURE_MODE'] = "1"
+#        dictionary_builder._build()
+#        adjacency_builder._build()
+#        linkedlist_builder._build()
+#        loaded = True
 
 CORS(app)
 
@@ -616,21 +616,21 @@ def getMode():
         return result['data']
 
 
-# if __name__ == "__main__":
-#     _initialize_environment()
-#     os.environ['DATA_MODIFIED'] = "0"
-#     os.environ['DATA_STRUCTURE_MODE'] = "1"
+if __name__ == "__main__":
+    _initialize_environment()
+    os.environ['DATA_MODIFIED'] = "0"
+    os.environ['DATA_STRUCTURE_MODE'] = "1"
 
-#     start_time = time.time()
-#     dictionary_builder._build()
-#     print(str(time.time() - start_time)+" Dictionary build")
+    start_time = time.time()
+    dictionary_builder._build()
+    print(str(time.time() - start_time)+" Dictionary build")
 
-#     start_time = time.time()
-#     adjacency_builder._build()
-#     print(str(time.time() - start_time)+" LinkedList build")
+    start_time = time.time()
+    adjacency_builder._build()
+    print(str(time.time() - start_time)+" LinkedList build")
 
-#     start_time = time.time()
-#     linkedlist_builder._build()
-#     print(str(time.time() - start_time)+" Adjacency build")
+    start_time = time.time()
+    linkedlist_builder._build()
+    print(str(time.time() - start_time)+" Adjacency build")
 
-#     app.run()
+    app.run()
